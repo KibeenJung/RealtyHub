@@ -1,10 +1,19 @@
 <template>
-  <ModalWindow :room_info_window="room_info_window" :distinguish_with_commas="distinguish_with_commas" />
+  <transition name="fade">
+    <ModalWindow @closeModal="room_info_window.is_open = false" :room_info_window="room_info_window"
+      :distinguish_with_commas="distinguish_with_commas" />
+  </transition>
   <Logo />
   <Menu />
   <Discount />
-  <RoomCard :room="room" :room_info_window="room_info_window" :distinguish_with_commas="distinguish_with_commas"
-    v-for="room in rooms" :key="room" />
+  <select v-model="sort_option" style="float:left; margin-left: 50px">
+    <option value="id"> 번호순</option>
+    <option value="price"> 가격낮은순 </option>
+    <option value="price_reverse"> 가격높은순 </option>
+  </select>
+  <RoomCard @click="room_info_window.is_open = true; room_info_window.room = room" :room="room"
+    :room_info_window="room_info_window" :distinguish_with_commas="distinguish_with_commas" v-for="room in rooms"
+    :key="room" />
 </template>
 
 <script>
@@ -21,6 +30,23 @@ export default {
     return {
       rooms: rooms,
       room_info_window: { is_open: false, room: null },
+      sort_option: 'id'
+    }
+  },
+  watch: {
+    sort_option(selected_option) {
+      if (selected_option === 'id') {
+        console.log('id sort')
+        this.rooms.sort(function (a, b) { return a.id - b.id })
+      }
+      else if (selected_option === 'price') {
+        console.log('price sort')
+        this.rooms.sort(function (a, b) { return a.price - b.price })
+      }
+      else if (selected_option === 'price_reverse') {
+        console.log('price_reverse sort')
+        this.rooms.sort(function (a, b) { return b.price - a.price })
+      }
     }
   },
   components: {
@@ -39,6 +65,42 @@ export default {
 </script>
 
 <style>
+.fade-enter-from {
+  transform: translateY(-1000px)
+}
+
+.fade-enter-active {
+  transition: all 1s;
+}
+
+.fade-enter-to {
+  transform: translateY(0px)
+}
+
+.fade-leave-from {
+  transform: translateY(0px)
+}
+
+.fade-leave-active {
+  transition: all 1s;
+}
+
+.fade-leave-to {
+  transform: translateY(-1000px)
+}
+
+.select-container {
+  display: flex;
+  /* Flexbox 사용 */
+  align-items: center;
+  /* 수직 가운데 정렬 */
+}
+
+.select-box {
+  margin-right: 10px;
+  /* 선택 상자와의 간격 조정 */
+}
+
 body {
   margin: 0
 }
