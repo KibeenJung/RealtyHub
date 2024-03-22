@@ -6,10 +6,10 @@
             <p> {{ room_info_window.room.content }} </p>
             <span> 계약 기간 (月): </span>
             <!-- <input v-model="month"> -->
-            <input v-model="month" type="range" min="1" max="24">
+            <input v-model="month" type="range" :min="default_month" max="24">
             <p> {{ month }} 개월 사용료: {{ distinguish_with_commas(room_info_window.room.price * month) }} 원 </p>
             <p> 조회수: {{ room_info_window.room.view_count }} </p>
-            <button @click="$emit('closeModal'); month = 1"> 나가기 </button>
+            <button @click="$emit('closeModal'); month = default_month"> 나가기 </button>
         </div>
     </div>
 </template>
@@ -19,14 +19,19 @@ export default {
     name: 'ModalWindow',
     data() {
         return {
-            month: 1,
+            default_month: 3,
+            month: this.default_month,
         }
     },
     watch: {
         month(value) {
             if (isNaN(value)) {
                 alert('문자열을 입력하였습니다.')
-                this.month = 1
+                this.month = this.default_month
+            }
+            else if (value <= 2) {
+                alert('최소 계약은 3개월부터 가능합니다.')
+                this.month = this.default_month
             }
         }
     },

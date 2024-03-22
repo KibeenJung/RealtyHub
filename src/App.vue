@@ -5,7 +5,7 @@
   </transition>
   <Logo />
   <Menu />
-  <Discount />
+  <Discount :discount_window="this.discount_window" v-if="discount_window.is_open == true"></Discount>
   <select v-model="sort_option" style="float:left; margin-left: 50px">
     <option value="id"> 번호순</option>
     <option value="price"> 가격낮은순 </option>
@@ -31,8 +31,20 @@ export default {
     return {
       rooms: rooms,
       room_info_window: { is_open: false, room: null },
+      discount_window: { is_open: true, discount_percentage: 30 },
       sort_option: 'id'
     }
+  },
+  mounted() {
+    setInterval(() => {
+      if (this.discount_window.discount_percentage > 1) {
+        this.discount_window.discount_percentage -= 1;
+      }
+      else {
+        this.discount_window.is_open = false;
+      }
+
+    }, 1000);
   },
   watch: {
     sort_option(selected_option) {
