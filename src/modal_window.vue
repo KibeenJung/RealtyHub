@@ -8,6 +8,7 @@
             <!-- <input v-model="month"> -->
             <input v-model="month" type="range" min="1" max="24">
             <p> {{ month }} 개월 사용료: {{ distinguish_with_commas(room_info_window.room.price * month) }} 원 </p>
+            <p> 조회수: {{ room_info_window.room.view_count }} </p>
             <button @click="$emit('closeModal'); month = 1"> 나가기 </button>
         </div>
     </div>

@@ -10,8 +10,9 @@
     <option value="id"> 번호순</option>
     <option value="price"> 가격낮은순 </option>
     <option value="price_reverse"> 가격높은순 </option>
+    <option value="view_count"> 조회순 </option>
   </select>
-  <RoomCard @click="room_info_window.is_open = true; room_info_window.room = room" :room="room"
+  <RoomCard @click="room_info_window.is_open = true; room.view_count += 1; room_info_window.room = room" :room="room"
     :room_info_window="room_info_window" :distinguish_with_commas="distinguish_with_commas" v-for="room in rooms"
     :key="room" />
 </template>
@@ -46,6 +47,10 @@ export default {
       else if (selected_option === 'price_reverse') {
         console.log('price_reverse sort')
         this.rooms.sort(function (a, b) { return b.price - a.price })
+      }
+      else if (selected_option === 'view_count') {
+        console.log('view count')
+        this.rooms.sort(function (a, b) { return b.view_count - a.view_count })
       }
     }
   },
